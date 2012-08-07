@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+ 
+ <title>webfrogs的个人博客</title>
+ <link href="http://webfrogs.github.com/atom.xml" rel="self"/>
+ <link href="http://webfrogs.github.com"/>
+ <updated>2012-08-07T17:49:32+08:00</updated>
+ <id>http://webfrogs.github.com</id>
+ <author>
+   <name>webfrogs</name>
+   <email>ccf.developer@gmail.com</email>
+ </author>
+
+ 
+ <entry>
+   <title>just test</title>
+   <link href="http://webfrogs.github.com/other/2012/08/07/just-test"/>
+   <updated>2012-08-07T00:00:00+08:00</updated>
+   <id>http://webfrogs.github.com/other/2012/08/07/just-test</id>
+   <content type="html">&lt;h1 id='id1'&gt;测试下&lt;/h1&gt;
+
+&lt;p&gt;这只是个测试页面，测试下发帖功能什么的。改下看看&lt;/p&gt;</content>
+ </entry>
+ 
+ 
+</feed>

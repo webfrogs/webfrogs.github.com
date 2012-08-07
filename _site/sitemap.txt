@@ -1,0 +1,10 @@
+
+http://webfrogs.github.com/archive.html
+http://webfrogs.github.com/atom.xml
+http://webfrogs.github.com/categories.html
+http://webfrogs.github.com/index.html
+http://webfrogs.github.com/pages.html
+http://webfrogs.github.com/sitemap.txt
+http://webfrogs.github.com/tags.html
+
+http://webfrogs.github.com/other/2012/08/07/just-test
