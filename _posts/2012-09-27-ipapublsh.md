@@ -11,7 +11,7 @@ tags: [IOS, xcode]
 ----
 通过itms-services协议，可以通过safari浏览器直接在IOS设备上安装应用程序。具体效果可以看图。
 
-![示例](/assets/images/QQ20120927-1)![示例](/assets/images/QQ20120927-2)![示例](/assets/images/QQ20120927-3)
+![示例](/assets/images/QQ20120927-1.jpg)![示例](/assets/images/QQ20120927-2.jpg)![示例](/assets/images/QQ20120927-3.jpg)
 
 利用这种方式，只要在内网布置一个服务器，测试人员只需要通过测试设备的safari浏览器访问特定的url既可以实现安装，然后测试了。（PS：越狱设备也可以）
 
