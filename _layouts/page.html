@@ -1,5 +1,11 @@
 ---
 layout: default
 ---
-{% include JB/setup %}
-{% include themes/mark-reid/page.html %}
+
+<section class="post">
+{{ content }}
+</section>
+{% if page.comments %}
+{% include comments.md %}
+{% endif %}
+
