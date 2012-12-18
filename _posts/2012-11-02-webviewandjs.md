@@ -5,9 +5,7 @@ description: ""
 category: IOS
 tags: [IOS]
 ---
-{% include JB/setup %}
 
------
 当程序中使用到UIWebView控件的时候，难免会遇到需要与页面进行交互的情况。这种情况在android平台下比较容易处理，android平台下WebView控件的addJavascriptInterface()方法可以很轻松的完成交互，而IOS上就稍复杂一些。
 
 页面与客户端的交互是通过JS来完成的，通常情况下与JS的交互可以分为两种：客户端传递给JS一些数据和JS向客户端请求一些本地操作。下面分别对这两种情况进行处理。

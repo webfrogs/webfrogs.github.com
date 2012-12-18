@@ -5,7 +5,7 @@ description: ""
 category: IOS
 tags: [IOS, xcode]
 ---
-{% include JB/setup %}
+
 
 #简介
 ----

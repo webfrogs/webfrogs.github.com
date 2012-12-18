@@ -5,7 +5,7 @@ description: "第一篇博客"
 category: essay
 tags: []
 ---
-{% include JB/setup %}
+
 
 博客前段时间就已经搭建好了，可是一直都没有更新什么内容。今天就随便写点什么。
 

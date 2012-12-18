@@ -5,7 +5,7 @@ description: "jeklly常用命令总结"
 category: jeklly
 tags: [jeklly]
 ---
-{% include JB/setup %}
+
 
 本文记录一些jeklly使用中常用的命令，这些命令均需在jeklly所在根目录下执行
 
