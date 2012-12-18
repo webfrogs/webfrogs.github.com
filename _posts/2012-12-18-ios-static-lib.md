@@ -25,4 +25,4 @@ tags: [IOS]
 ![release](/assets/images/QQ20121218-3.jpg)
 
 ###4.自动拷贝头文件
-在工程对应的target的“Build Phases”下添加“Copy Headers”的选项。该选项默认是没有的，添加方法是点击下方的“Add Build Phase”按钮后选择后即可添加。该选项下有3个子选项，分别是Public,Private,Project。通过点击下方的加号，可以将工程中的头文件添加到“Project”中，在其中的对应头文件点击右键，选择“Move to Public Group”，当头文件移到“Pulic”后，编译工程以后，在工程编译后.a文件所在的路径下，会同时出现一个/usr/local/include的文件夹，其中的头文件就是public group中的头文件。这时只需将.a文件和这个路径下的头文件拷贝到所需工程文件即可。
+在工程对应的target的“Build Phases”下添加“Copy Headers”的选项。该选项默认是没有的，添加方法是点击下方的“Add Build Phase”按钮后选择后即可添加。该选项下有3个子选项，分别是Public,Private,Project。通过点击下方的加号，可以将工程中的头文件添加到“Project”中，在其中的对应头文件点击右键，选择“Move to Public Group”，当头文件移到“Pulic”后，编译工程以后，在工程编译后.a文件所在的路径下，会同时出现一个"usr/local/include"的文件夹，其中的头文件就是public group中的头文件。这时只需将.a文件和这个路径下的头文件拷贝到所需工程文件即可。
