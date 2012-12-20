@@ -17,7 +17,7 @@ tags: [IOS, xcode]
 
 itms-services协议需要一个plist配置文件。如果要实现上面图示的功能，需要的文件有：一个ipa文件，一个plist文件，一个html文件和一个图片文件。其中，最主要的，就是plist文件。通过shell脚本，我们可以让其自动为我们生成plist文件和html文件，并且在xcode工程中的ipa文件和程序图标文件复制一份，放到一起。下面，我们来实现这个名为“ipa-publish”的shell脚本。
 
-**注意：**该脚本需要与“ipa-build”脚本配合使用。“ipa-build”脚本下载：[点击这里](/assets/download/ipa-build)，相关文章[《xcode自动打ipa包脚本》](http://webfrogs.github.com/IOS/2012/09/19/buildipa/)
+**注意：**该脚本需要与“ipa-build”脚本配合使用。“ipa-build”脚本下载：[点击这里](/assets/download/ipa-build)，相关文章[《xcode自动打ipa包脚本》](http://webfrogs.github.com/2012/09/19/buildipa/)
 
 #实现
 ----
