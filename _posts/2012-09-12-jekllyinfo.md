@@ -1,15 +1,15 @@
 ---
 layout: post
-title: "jeklly常用命令总结"
-description: "jeklly常用命令总结"
-category: jeklly
-tags: [jeklly]
+title: "jekyll常用命令总结"
+description: "jekyll常用命令总结"
+category: jekyll
+tags: [jekyll]
 ---
 
 
-本文记录一些jeklly使用中常用的命令，这些命令均需在jeklly所在根目录下执行
+本文记录一些jekyll使用中常用的命令，这些命令均需在jekyll所在根目录下执行
 
-###本地启动jeklly命令
+###本地启动jekyll命令
 
 
 	// 本地启动jeklly，默认4000端口
