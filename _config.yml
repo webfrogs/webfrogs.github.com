@@ -1,6 +1,7 @@
 markdown: rdiscount
-permalink: /:year/:month/:title/
+permalink: /:year/:month/:day/:title/
 url: http://webfrogs.github.com
 author: webfrogs
 pygments: true
+safe: true
 paginate: 16
