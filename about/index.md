@@ -4,9 +4,7 @@ layout: page
 comments: yes
 ---
 
-webfrogs
-
-码农，目前从事IOS的相关开发。
+程序猿一头，目前从事IOS系统的相关开发。
 
 开源爱好者。        
 
