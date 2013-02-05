@@ -50,3 +50,37 @@ imageView.contentMode = UIViewContentModeScaleAspectFill;	// 保持原比例裁�
 1、如果UITextView或者UITextField有inputAccessoryView属性，则键盘高度包括inputAccessoryView属性的view的高度。
 
 2、键盘所在的y坐标是以整个屏幕的坐标为参照的。在实际使用中，通常需要减去上方状态栏的高度，即减去20.
+
+* ####将UIView转换为UIImage并保存到文件
+
+转换函数：
+
+{% highlight objc %}
+//把UIView 转换成图片  
+-(UIImage *)getImageFromView:(UIView *)view{  
+         UIGraphicsBeginImageContext(view.bounds.size);  
+         [view.layer renderInContext:UIGraphicsGetCurrentContext()];  
+         UIImage *image = UIGraphicsGetImageFromCurrentImageContext();  
+         UIGraphicsEndImageContext();  
+         return image;  
+}
+{% endhighlight %}
+
+将UIImage保存为文件（jpg和png格式）代码：
+{% highlight objc %}
+//把UIView 转换成图片  
+// Create paths to output images
+NSString  *pngPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Test.png"];
+NSString  *jpgPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Test.jpg"];
+
+// Write a UIImage to JPEG with minimum compression (best quality)
+// The value 'image' must be a UIImage object
+// The value '1.0' represents image compression quality as value from 0.0 to 1.0
+
+[UIImageJPEGRepresentation(image, 1.0) writeToFile:jpgPath atomically:YES];
+
+// Write image to PNG
+[UIImagePNGRepresentation(image) writeToFile:pngPath atomically:YES];
+{% endhighlight %}
+
+
