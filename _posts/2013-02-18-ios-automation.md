@@ -37,7 +37,22 @@ IOS的开发过程中，当需要给测试人员发布测试包的时候，直�
 
 ----
 
-关于脚本实现部分，大家可以打开脚本来看一下，里面的注释算是很详细了。不需要太多说明。其中值得一提的就是我在实现upload脚本时，碰到了一个问题就是使用脚本来自动输入密码，也就是交互式脚本的编写。最后选择了expect来完成，因为我发现mac系统里自带了这个expect命令。
+打开工程后，会发现本套脚本中包含好几个shell文件。下面对其功能做说明：
+
+	ipa-build: 	编译xcode工程并生成ipa文件
+	ipa-publish: 生成符合itms-services协议的文件，并发布到服务器。
+	sendEmail: 	stmp发送email的脚本。（别人写的）
+	sftpDownloadFile: 通过sftp协议下载文件
+	sftpUploadFile: 通过sftp协议上传文件
+	updateLocalIndexHtml:	对索引文件进行处理(二进制文件，非shell脚本)
+	uploadItemsServicesFiles:	将itms-services协议文件上传到服务器
+	
+	
+实际使用的脚本，只有"ipa-build"和"ipa-publish"这两个。其他文件会被ipa-publish这个脚本调用的依赖文件。其中出了"updateLocalIndexHtml"是我用objc写的一个用来进行文本处理的编译后的二进制文件，其余均为shell脚本。
+
+shell脚本实现，大家可以打开脚本来看一下，里面的注释算是很详细了。不需要太多说明。
+
+其中值得一提的就是我在写sftp协议上传功能的时候，碰到了一个问题就是使用脚本来自动输入密码，也就是交互式脚本的编写。最后选择了expect来完成，因为我发现mac系统里自带了这个expect命令。
 
 ###使用
 
@@ -47,7 +62,7 @@ IOS的开发过程中，当需要给测试人员发布测试包的时候，直�
 
 ipa-build脚本使用方法：
 
-	ipa-build脚本路径 参数1 参数2
+	ipa-build脚本绝对路径 参数1 参数2
 
 其中，参数1是IOS工程的根路径,是必输项。参数2可以不输入，是可选的，含义是编译时的工程configuration类型，有4种类型可选：Debug, AdHoc,Release， Distribution。默认是Release。
 
@@ -55,23 +70,49 @@ ipa-build脚本运行后，会在IOS工程根路径下生成名为“build”的
 
 ipa-publish脚本使用方法:
 
-	ipa-publish脚本路径 参数1 参数2
+	ipa-publish脚本绝对路径 参数1 参数2
 	
-参数1是IOS工程的根路径,是必输项。参数2是可选的，意思是itms-services协议安装时提示弹出程序名称，无太大意义。只输入第一个参数即可。
+参数1是IOS工程的根路径,是必输项。参数2是可选的，含义是当上传文件成功后是否发送email通知，y为发送，n为不发送，默认的值是不发送。
 
-ipa-publish脚本运行后，会在“build”文件夹中生成一个以targetname为名字的文件夹。其中，存放了itms-services协议所需的所有文件。并会将里面内容全部上传到服务器中。
+ipa-publish脚本运行后，会在“build”文件夹中生成一个以工程的targetname为名字的文件夹。其中，存放了itms-services协议所需的所有文件。脚本会将里面内容全部上传到服务器中。
 
-###注意
+###注意事项
 ----
 
-脚本下载后,若要使用，有些脚本需要一些改动。
+1、运行脚本需要绝对路径，不能使用相对路径。
 
-其中ipa-build脚本无须更改。若要使用ipa-publish脚本，需打开脚本做一些改动方可使用。
+2、脚本下载后,若要使用，有些脚本需要一些改动。
 
-ipa-build脚本需要修改的地方：
+其中ipa-build脚本无须更改。可以直接使用。ipa-publish脚本需要配置一些信息后方能正常使用。
 
-	1、pulish_url修改为http方式能访问到的地址
-	2、脚本最后一句命令，需要修改为本机存放upload脚本的绝对路径
+用文本打开ipa-publish脚本后，在shell开始的地方，有一段需要配置的地方，如下：
 
-如果你也是使用sftp协议来向服务器上传文件，只需修改upload脚本开始时的参数即可.其中参数hostfilepath指的是用来放置上次文件的服务器绝对路径。
+	#须配置内容  start
+
+	#sftp参数设置
+	sftp_server=192.168.xx.xx
+	sftp_username=xx
+	sftp_password=xx
+	sftp_workpath="/usr/share/xx/xx/xx"
+
+	#发布应用的url地址
+	pulish_url="http://xx.com/xx"
+
+	#以下是邮箱的相关设置
+	#收件人
+	email_reciver=xx@xx.com
+	#发送者邮箱
+	email_sender=xx@xx.com
+	#邮箱用户名
+	email_username=xx
+	#邮箱密码
+	email_password=xx
+	#smtp服务器地址
+	email_smtphost=smtp.exmail.qq.com
+
+
+	#可配置内容  end
+	
+	
+根据实际情况配置即可。
 
