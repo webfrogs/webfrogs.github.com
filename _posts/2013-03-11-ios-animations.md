@@ -19,7 +19,7 @@ tags:
 ###动画
 ----
 
-#####1、什么能够使用动画
+#####什么能够使用动画
 
 UIKit框架和Core Animation都提供了对动画的支持，但是这两种技术对动画的支持程度有所不同。UIKit框架是通过UIView对象来支持动画的。UIView包含了一些支持动画的属性，但这并不意味着动画会自动产生。改变这些属性通常只是立即更新UIView对象的属性值，并不会有动画产生。想要使这些改变产生动画，你必须在一个动画块中改变这些属性值。
 
@@ -50,7 +50,7 @@ UIKit框架和Core Animation都提供了对动画的支持，但是这两种技�
 
 **注意：**如果视图包含了自定义的图层对象——也就是说，图层对象没有关联的视图——任何该图层的变化动画，都必须使用Core Animation来完成。
 
-#####2、视图动画属性的改变
+#####视图动画属性的改变
 
 UIView类对象属性改变所产生动画的代码写法有两种：如果在iOS4以后的系统，可以使用代码块对象，更早的系统中可以使用Begin/Commit函数。
 
@@ -62,5 +62,43 @@ UIView类对象属性改变所产生动画的代码写法有两种：如果在iO
 
 以上这些函数，都是UIView的类函数。正是由于是类函数，在其中的动画块代码不仅仅只展示单一的视图，可以包含多个视图的变化。
 
+如果应用程序是运行在iOS3.2及更早的版本，需要使用UIView的以下两个类函数：
+
+	beginAnimations:context: 
+	commitAnimations class methods
+
+来定义动画代码块。这两个函数标记了动画代码块的开始和结束位置。
+
+**注意：**如果所写的应用程序是运行在iOS4及以上的环境中，应该使用基于块的函数
+
+默认情况下，在一个动画块中所有动画属性的改变都会被展示。如果只希望其中一部分的变化以动画来表示，其余的不用。那么使用*setAnimationsEnabled:*函数可以暂时使动画失效，之后做任何不想使用动画的改变，然后再调用一次*setAnimationsEnabled:*函数来启用动画。还能通过调用*areAnimationsEnabled*函数来查看当前动画的可用状态。
+
+#####为Begin/Commit函数配置参数
+
+Begin/Commit函数有许多动画参数可以配置，需要通过使用UIView的一些类函数来完成。
+
+配置参数的函数列表详见文档。
 
 
+#####设置动画代理
+
+如果希望在一段动画结束之后立即执行一段代码，需要为Begin/Commit函数关联一个代理对象和一个开始或者结束的选择器。通过UIView的类函数*setAnimationDelegate:*设置代理对象，类函数*setAnimationWillStartSelector:*和*setAnimationDidStopSelector:*设置开始结束选择器。
+
+动画代理方法应该与以下形式类似：
+
+	- (void)animationWillStart:(NSString *)animationID context:(void *)context;
+	- (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
+
+#####改变一个视图的子视图
+
+当一个视图的子视图发生改变时，若需要动画来过渡，则需要使用函数*transitionWithView:duration:options:animations:completion:*来完成。
+
+#####使用一个视图来替换另一个视图
+
+当使用一个视图来替换另一个视图时，若需要动画过渡，则需要使用函数*transitionFromView:toView:duration:options:completion:*来完成
+
+#####其他
+
+可以使用完成块或者代理函数来完成多个动画的连接。
+
+基于视图和基于图层的动画可以混合在一起使用。
