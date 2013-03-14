@@ -65,7 +65,7 @@ UIView类对象属性改变所产生动画的代码写法有两种：如果在iO
 如果应用程序是运行在iOS3.2及更早的版本，需要使用UIView的以下两个类函数：
 
 	beginAnimations:context: 
-	commitAnimations class methods
+	commitAnimations
 
 来定义动画代码块。这两个函数标记了动画代码块的开始和结束位置。
 

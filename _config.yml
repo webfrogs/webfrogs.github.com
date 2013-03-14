@@ -4,6 +4,6 @@ url: http://webfrogs.github.com
 author: webfrogs
 pygments: true
 safe: true
-paginate: 10
+paginate: 16
 auto: true
 

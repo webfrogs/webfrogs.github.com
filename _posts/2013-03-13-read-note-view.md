@@ -56,4 +56,21 @@ UIView类使用了请求式绘制模型来展示内容。当一个视图第一�
 ##Views
 ----
 
+-	使用编程方法来创建视图时，视图创建代码一般放在视图控制器的*loadView*函数中。无论是使用编程或者nib文件来创建视图，都可以在*viewDidLoad*函数中添加视图的配置代码。
+-	父视图会自动retain子视图，所以当添加了一个子视图后，release子视图的操作是安全的。事实上，推荐这么做，因为它能防止应用程序保持太多的视图而导致的内存泄露。记住，如果从父视图中移除了子视图后，还想继续使用子视图，必须对子视图做retain操作。*removeFromSuperview*函数会在子视图从父视图中移除后，自动释放子视图。如果没有在下一个时间循环周期前做retain操作，这个视图将会被释放。
+-	UIView的*window*属性代表当前正在显示的视图所在的窗口。对于当前在屏幕上显示的视图来说，窗口对象就是它们所在视图层次的根视图。
+-	如果隐藏的视图是first responder，这个视图不会自动的取消自己first responder的状态。以first responder为目标的事件依然会被传递到这个隐藏的视图。为了防止这种情况发生，应该在隐藏视图时，强制使其取消first responder状态。
+-	当包含了旋转因子的视图做矩形转换时，看如下的图：
 
+![图片](http://developer.apple.com/library/ios/documentation/windowsviews/conceptual/viewpg_iphoneos/Art/uiview_convert_rotated.jpg)
+
+-	如果一个视图的*transform*属性不是identity transform，那么它的frame和autoresizing行为结果都是未定义的。
+
+-	视图在初始化过程之前调用UIView类方法*layerClass*，并且使用返回的类来创建layer对象。此外，视图总是会指定自己本身作为layer对象的代理。在这点上，视图拥有着图层，并且视图和图层之前的关系必须不能改变。也就是说，不能指定相同的视图作为另一个图层对象的代理。改变这种所属关系或者代理关系，都可能会导致视图绘制的错误，并且应用程序存在潜在的crash问题。
+
+-	通过创建UIView的子类，重写*layerClass*类函数可以改变创建图层时的默认的CALayer类。
+-	自定义的layer不接收事件，也不参与到responder chain中，但是它们绘制自身，并且根据Core Animation的规则，在他们的父视图或者父图层中响应大小变化。
+-	CGRectGetMidX(),CGRectGetMidY()两个函数可以分别得到一个frame的中心点的x坐标和y坐标。
+-	CALayer的属性*position*就是中心点，和UIView的属性*center*效果相同。
+-	自定义的视图类，如果是通过代码来创建，则需要重写*initWithFrame:*初始化函数。而若是从nib文件中加载，则需要重写*initWithCoder:*函数。**注意：**nib加载的视图并不会调用*initWithFrame:*函数。
+-	视图默认的行为是一次只响应一个touch。如果用户按下了第二个手指，系统会忽视这个touch事件并且不会将它报告给视图。如果希望在视图的事件处理函数中跟踪多手指手势，需要设置视图的*multipleTouchEnabled*属性为YES来使多点触摸事件生效。
