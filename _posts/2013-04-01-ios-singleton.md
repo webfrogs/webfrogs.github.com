@@ -16,8 +16,6 @@ tags:
 1、@synchronized
 
 {% highlight objc %}
-
-static InstanceClass *instance;
 static InstanceClass *instance;
 + (InstanceClass *)defaultInstance{
     @synchronized (self){
