@@ -15,7 +15,8 @@ comments: no
 
 个人邮箱: [ccf.developer@gmail.com](mailto:ccf.developer@gmail.com)     
 新浪微博: [思圃](http://weibo.com/u/1713195262)	 
-github : [webfrogs](https://github.com/webfrogs)
+github : [webfrogs](https://github.com/webfrogs)        
+豆瓣：[网蛙](http://www.douban.com/people/48235183/)
 
 ----
 
