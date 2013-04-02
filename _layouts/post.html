@@ -6,6 +6,15 @@ layout: default
 {{ content }}
 </section>
 <section class="meta">
+
+<br/>
+<br/>
+<span>
+	<a {% if page.previous %} href="{{ site.url }}{{ page.previous.url }}" class="pageNav"{% endif %} {% unless page.previous %} class="pageNavInvalid" {% endunless %} >Previous</a>
+	&nbsp;&nbsp;&nbsp;
+	<a {% if page.next %} href="{{ site.url }}{{ page.next.url }}" class="pageNav"{% endif %} {% unless page.next %} class="pageNavInvalid" {% endunless %} >Next</a>
+</span>
+<hr>
 <span class="author">
   <a href="http://webfrogs.github.com">{{ site.author }}</a>
 </span>
@@ -35,6 +44,7 @@ layout: default
 {% endif %}
 </section>
 {% include comments.md %}
+<!--
 <script type="text/javascript">
 $(function(){
   $(document).keydown(function(e) {
@@ -55,4 +65,5 @@ $(function(){
   });
 })
 </script>
+-->
 
