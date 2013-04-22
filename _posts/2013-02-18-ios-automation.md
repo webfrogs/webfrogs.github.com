@@ -2,9 +2,9 @@
 layout: post
 title: "IOS工程自动打包并发布脚本实现"
 categories:
-- IOS
+- iOS
 tags:
-- IOS
+- iOS
 - xcode
 
 

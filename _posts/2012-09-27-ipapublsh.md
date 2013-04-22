@@ -2,8 +2,8 @@
 layout: post
 title: "shell脚本实现ipa一键安装(itms-services协议)"
 description: ""
-category: IOS
-tags: [IOS, xcode]
+category: iOS
+tags: [iOS, xcode]
 ---
 
 

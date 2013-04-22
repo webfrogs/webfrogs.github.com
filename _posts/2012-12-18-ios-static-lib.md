@@ -2,8 +2,8 @@
 layout: post
 title: "ios静态库制作中的注意事项"
 description: ""
-category: IOS
-tags: [IOS]
+category: iOS
+tags: [iOS]
 ---
 
 

@@ -2,9 +2,9 @@
 layout: post
 title: "IOS开发之细节知识点汇总"
 categories:
-- IOS
+- iOS
 tags:
-- IOS
+- iOS
 
 
 ---

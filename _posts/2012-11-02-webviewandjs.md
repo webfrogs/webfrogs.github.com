@@ -2,8 +2,8 @@
 layout: post
 title: "IOS中UIWebView和JavaScript交互"
 description: ""
-category: IOS
-tags: [IOS]
+category: iOS
+tags: [iOS]
 ---
 
 当程序中使用到UIWebView控件的时候，难免会遇到需要与页面进行交互的情况。这种情况在android平台下比较容易处理，android平台下WebView控件的addJavascriptInterface()方法可以很轻松的完成交互，而IOS上就稍复杂一些。

@@ -2,9 +2,9 @@
 layout: post
 title: "《View Programming Guide for iOS》阅读笔记"
 categories:
-- IOS
+- iOS
 tags:
-- IOS
+- iOS
 
 
 ---

@@ -2,9 +2,9 @@
 layout: post
 title: IOS开发之ZBarReaderView的使用
 categories:
-- IOS
+- iOS
 tags:
-- IOS
+- iOS
 - Zbar
 
 ---
