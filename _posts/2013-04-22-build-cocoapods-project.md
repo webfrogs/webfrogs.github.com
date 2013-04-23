@@ -34,7 +34,7 @@ CocoaPods是一个用于管理iOS工程中所使用第三方开源库的工具�
 参数1：cocoapods工程的根路径    
 参数2：工程configuration。默认为Release。
 
-打包完成后所生成的ipa文件位于工程根路径的“build”文件夹下的“iphoneos”文件夹中。
+打包完成后所生成的ipa文件位于工程根路径的“build”文件夹下的“ipa-build”文件夹中。
 
 ----
 ###脚本分析
