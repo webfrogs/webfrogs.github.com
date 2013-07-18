@@ -33,10 +33,10 @@ tags:
 &nbsp;&nbsp;&nbsp;&nbsp;3.2、[优先级](#priorities)    
 4、[孤立队列](#isolation)    
 &nbsp;&nbsp;&nbsp;&nbsp;4.1、[资源保护](#protecting_a_resource)    
-&nbsp;&nbsp;&nbsp;&nbsp;4.2、单一资源的多读单写    
-&nbsp;&nbsp;&nbsp;&nbsp;4.3、论点    
-&nbsp;&nbsp;&nbsp;&nbsp;4.4、全都使用异步    
-&nbsp;&nbsp;&nbsp;&nbsp;4.5、如何写出好的异步API    
+&nbsp;&nbsp;&nbsp;&nbsp;4.2、[单一资源的多读单写](#multiple_readers_single_writer)    
+&nbsp;&nbsp;&nbsp;&nbsp;4.3、[锁竞争](#contention)    
+&nbsp;&nbsp;&nbsp;&nbsp;4.4、[全都使用异步分发](#fully_async)    
+&nbsp;&nbsp;&nbsp;&nbsp;4.5、[如何写出好的异步API](#write_good_async_api)    
 5、迭代执行    
 6、组    
 &nbsp;&nbsp;&nbsp;&nbsp;6.1、对现有API使用*dispatch_group_t*    
@@ -182,6 +182,173 @@ GCD通过创建所谓的线程池来大致匹配CPU核心数量。要记住，�
 <a id='protecting_a_resource' name='protecting_a_resource'> </a>
 ####4.1、资源保护
 
+多线程编程中，最常见的情形是你有一个资源，每次只有一个线程被允许访问这个资源。
+
+我们在[《有关并发编程的文章》](http://www.objc.io/issue-2/concurrency-apis-and-pitfalls.html#shared_resources)（参考破船的译文）中讨论了资源在并发编程中意味着什么，其实并发编程中的资源通常就是一块内存或者一个对象，每次只有一个线程可以访问它。
+
+举例来说，我们需要以多线程（或者多个队列）方式访问*NSMutableDictionary*。我们可能会照下面的代码来做：
+
+{% highlight objc %}
+- (void)setCount:(NSUInteger)count forKey:(NSString *)key
+{
+    key = [key copy];
+    dispatch_async(self.isolationQueue, ^(){
+        if (count == 0) {
+            [self.counts removeObjectForKey:key];
+        } else {
+            self.counts[key] = @(count);
+        }
+    });
+}
+
+- (NSUInteger)countForKey:(NSString *)key;
+{
+    __block NSUInteger count;
+    dispatch_sync(self.isolationQueue, ^(){
+        NSNumber *n = self.counts[key];
+        count = [n unsignedIntegerValue];
+    });
+    return count;
+}
+{% endhighlight %}
+
+通过以上代码，仅仅只有一个线程可以访问*NSMutableDictionary*的实例。
+
+注意以下四点：
+
+1. 不要使用上面的代码，请先阅读[多读单写](#multiple_readers_single_writer)和[锁竞争](#contention)
+2. 我们使用*async*当存储一个值的时候，这很重要。我们不想，也不必阻塞当前线程去等待写操作完成。当读操作时，我们使用*sync*因为我们需要返回值。
+3. 根据函数的定义，*-setCount:forKey:*需要一个*NSString*值，我们是使用*dispatch_async*来传递该值。在代码执行之前，函数的调用者可以自由传递一个*NSMutableString*值并且在函数返回后可以修改它。因此我们必须对传入的字符串使用*copy*操作以确保函数能够正确地工作。如果传入的字符串不是可变的（也就是正常的*NSString*类型），调用*copy*基本上是个空操作。
+4. *isolationQueue*创建时，参数*dispatch_queue_attr_t*的值需要是*DISPATCH_QUEUE_SERIAL*（或者0）。
+
+<a id='multiple_readers_single_writer' name='multiple_readers_single_writer'> </a>
+####4.2、单一资源的多读单写
+
+我们能够改善上面的那个例子。GCD有可以让多线程运行的并发队列。我们能够安全地使用多线程来从*NSMutableDictionary*中读取只要我们不同时修改它。当我们需要改变这个字典时，我们使用*barrier*来分发这个块代码。这样的块代码会在所有之前预定好的块代码完成之后执行，并且所有在它之后的块都会在它完成后才会执行。
+
+我们以以下方式创建队列：
+
+{% highlight objc %}
+self.isolationQueue = dispatch_queue_create([label UTF8String], DISPATCH_QUEUE_CONCURRENT);
+{% endhighlight %}
+
+并且用以下代码来改变setter函数：
+
+{% highlight objc %}
+- (void)setCount:(NSUInteger)count forKey:(NSString *)key
+{
+    key = [key copy];
+    dispatch_barrier_async(self.isolationQueue, ^(){
+        if (count == 0) {
+            [self.counts removeObjectForKey:key];
+        } else {
+            self.counts[key] = @(count);
+        }
+    });
+}
+{% endhighlight %}
+
+当你使用并发队列时，要确保所有的*barrier*调用都是*async*（异步）的。如果你使用*dispatch_barrier_sync*，那么你很可能会使你自己（更确切的说是，你的代码）产生死锁。写操作需要界限，并且可以是异步的。
+
+<a id='contention' name='contention'> </a>
+####4.3、锁竞争
+首先，这里有一句警告：上面这个例子忠我们保护的资源是一个*NSMutableDictionary*，这段代码作为一个例子运行的不错。但是在真实的代码环境下，把孤立队列放到一个正确的复杂度层级下是很重要的。
+
+如果你对*NSMutableDictionary*的访问操作变得非常频繁，你会碰到一个已知的叫做锁竞争的问题。锁竞争并不是只是在GCD和队列下才变得特殊，任何使用了锁机制的程序都会碰到同样的问题——只不过不同的锁机制会以不同的方式碰到。
+
+所有对*dispatch_async*，*dispatch_sync*等等的调用都需要完成某种形式的锁——以确保仅有一个线程或者特定的线程运行所给的块代码。GCD在一些范围可以避免使用锁而以时序安排来代替，但在最后，问题只是指有所变化。根本问题仍然存在：如果你有大量的线程在同一时间去竞争同一个锁，你就会看到性能的变化，性能会严重下降。
+
+你应该从直接复杂层次中隔离开。当你发现了性能下降，这是表明代码中，存在明显的设计问题。这里有两个地方的开销需要你来平衡。第一个是独占临界区资源太久的开销，以至于别的线程都从进入临界区的操作中阻塞。第二个是太频繁进出临界区的开销。在GCD的世界里，第一种开销的情况就是一个块代码在孤立队列中运行，它可能潜在的阻塞了其他将要在这个孤立队列中运行的代码。第二种开销对应的就是调用*dispatch_async*和*dispatch_sync*的开销。无论再怎么优化，这两个动作都不是无代价的。
+
+不幸的是，不存在通用的标准来说明什么是正确的平衡，你需要自己评测和调整。
+
+如果你看上面例子中的代码，我们的临界区代码仅仅做了很简单的事情。这可能也可能不是好的，依赖于它怎么被使用。
+
+在你自己的代码中，要考虑自己是否在更高的层次保护了孤立队列。举个例子，类*Foo*有一个孤立队列并且它本身保护着自己访问*NSMutableDictionary*，有可能有一个用到了*Foo*的类*Bar*有一个孤立队列保护所有对类*Foo*的使用。换句话说，你需要把类*Foo*改变为不再是线程安全的（没有孤立队列），并在*Bar*中，使用一个孤立队列来确保同一时间只能有一个线程使用*Foo*。
+
+<a id='fully_async' name='fully_async'> </a>
+####4.4、全都使用异步分发
+我们在这稍稍转变以下话题。正如你在上面看到的，你可以分发一个块，一个工作单元，即可以是同步的方式，也可以是异步的方式。我们在[关于并发API和陷阱的文章](http://www.objc.io/issue-2/concurrency-apis-and-pitfalls.html#dead_locks)（可以参考破船的译文，见本文开头）中讨论最多的就是死锁。在GCD中，以同步分发的方式非常容易出现这种情况。见下面的代码：
+
+{% highlight objc %}
+dispatch_queue_t queueA; // assume we have this
+dispatch_sync(queueA, ^(){
+    dispatch_sync(queueA, ^(){
+        foo();
+    });
+});
+{% endhighlight %}
+
+一旦我们进入到第二个*dispatch_sync*，就会发生死锁。我们不能分发到queueA，因为有人（当前线程）正在队列中并且永远不会离开。但是有更隐晦的死锁方式：
+
+{% highlight objc %}
+dispatch_queue_t queueA; // assume we have this
+dispatch_queue_t queueB; // assume we have this
+
+dispatch_sync(queueA, ^(){
+    foo();
+});
+
+void foo(void)
+{
+    dispatch_sync(queueB, ^(){
+        bar();
+    });
+}
+
+void bar(void)
+{
+    dispatch_sync(queueA, ^(){
+        baz();
+    });
+}
+
+{% endhighlight %}
+
+单独的每次调用*dispatch_sync()*看起来都没有问题，但是一旦组合起来，就会发生死锁。
+
+这是使用同步分发存在的固有问题，如果我们使用异步分发，比如：
+
+{% highlight objc %}
+dispatch_queue_t queueA; // assume we have this
+dispatch_async(queueA, ^(){
+    dispatch_async(queueA, ^(){
+        foo();
+    });
+});
+{% endhighlight %}
+
+一切运行正常。异步调用不会产生死锁。因此值得我们在任何可能的时候都使用异步分发。我们使用一个异步调用结果块的函数，来代替编写一个返回值（这必须要用同步）的方法或者函数。这种方式，我们会有更少发生死锁的可能性。
+
+异步调用的副作用就是它们很难调试。当我们停止了调试器中的代码，再回溯并查看已经变得没有意义了。
+
+要记住这些。死锁通常是最难处理的问题。
+
+<a id='write_good_async_api' name='write_good_async_api'> </a>
+####4.5、如何写出好的异步API
+如果你正在给设计一个给别人（或者是给自己）使用的API，你需要记住几个好的实践。
+
+正如我们刚刚提到的，你需要倾向于异步API。当你创建一个API，它会在你的控制之外以各种方式调用，如果你的代码能产生死锁，那么死锁就会发生。
+
+如果你需要写的函数或者方法，那么让它们调用*dispatch_async()*。不要让你的函数调用者来这么做，调用者应该可以通过调用你提供的方法或者函数来做到这个。
+
+如果你的方法或函数有一个返回值，通过一个回调的处理来异步传递返回值。这个API应该是这样的，你的方法或函数持有一个结果块代码和一个将结果传递到的目标队列。你函数的调用着不需要自己来将结果分发。这么做的原因很简单：几乎所有时间，调用者都需要在一个适当的队列中，这种方式的代码是很容易被阅读的。并且你的函数无论如何将会（必须）调用*dispatch_async()*来进行回调处理。
+
+如果你写一个类，让你类的使用这设置一个将回调传递到的队列会是一个好的选择。你的代码可能像这样：
+
+{% highlight objc %}
+- (void)processImage:(UIImage *)image completionHandler:(void(^)(BOOL success))handler;
+{
+    dispatch_async(self.isolationQueue, ^(void){
+        // do actual processing here
+        dispatch_async(self.resultQueue, ^(void){
+            handler(YES);
+        });
+    });
+}
+{% endhighlight %}
+
+如果你以这种方式来写你的类，让类一起工作就会变得相当容易。如果类A使用了类B，它会把自己的孤立队列设置为B的回调队列。
 
 
 
