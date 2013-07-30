@@ -15,8 +15,9 @@ comments: no
 
 个人邮箱: [ccf.developer@gmail.com](mailto:ccf.developer@gmail.com)     
 新浪微博: [webfrogs](http://weibo.com/u/1713195262)	 
+豆瓣：[网蛙](http://www.douban.com/people/48235183/)    
 github : [webfrogs](https://github.com/webfrogs)        
-豆瓣：[网蛙](http://www.douban.com/people/48235183/)
+twitter: [Carl Chen](https://twitter.com/CarlOnWeb)
 
 ----
 
