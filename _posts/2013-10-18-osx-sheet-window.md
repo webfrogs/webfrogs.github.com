@@ -17,6 +17,7 @@ tags:
 Mac开发和iOS开发还是有一定的区别的，如果有iOS开发基础，那么看完[参考链接](#link)里的《How to Make a Simple Mac App on OS X 10.7 Tutorial》系列文章你就已经可是上手开发Mac应用了。
 
 ##Sheets介绍
+----
 大家对sheet应该不会感到陌生，iOS中就有UIActionSheet这个控件。苹果官方文档中对sheet是这么定义的。
 
 *A sheet is simply a dialog attached to a specific window, ensuring that a user never loses track of which window the dialog belongs to.*
