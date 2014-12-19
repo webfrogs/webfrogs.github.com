@@ -1,6 +1,6 @@
 markdown: rdiscount
 permalink: /:year/:month/:day/:title/
-url: http://webfrogs.github.com
+url: http://blog.nswebfrog.com
 author: webfrogs
 pygments: true
 safe: true
