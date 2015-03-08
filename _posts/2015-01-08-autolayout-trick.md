@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "AutoLayout 布局技巧－等宽子视图"
+title: "Auto Layout 布局技巧－等宽子视图"
 categories:
 - iOS
 tags:
