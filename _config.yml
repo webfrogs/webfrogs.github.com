@@ -1,9 +1,8 @@
 markdown: rdiscount
 permalink: /:year/:month/:day/:title/
 url: http://blog.nswebfrog.com
-author: webfrogs
-pygments: true
+author: nswebfrog
+highlighter: pygments
+exclude: ["Rakefile", "CNAME", "README.md"]
 safe: true
 paginate: 16
-auto: true
-
