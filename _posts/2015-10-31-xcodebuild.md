@@ -41,7 +41,7 @@ xcodebuild 命令是 Xcode Command Line Tools 的一部分。通过调用这个�
 
 如果工程使用了 Cocoapods 来管理第三方库，那么命令的执行方式上有所不同，因为 Cocoapods 会把工程变成一个 workspace。将 workspace 工程 archive 的命令如下。
 
-	xcodebuild -workspace <> -scheme <schemeName> -archivePath build/<schemeName>.xcarchive archive
+	xcodebuild -workspace <workspaceName> -scheme <schemeName> -archivePath build/<schemeName>.xcarchive archive
 
 这个命令和上面的命令区别就在于需要指定 workspace 的文件名。
 
