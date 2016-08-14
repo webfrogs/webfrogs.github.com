@@ -4,5 +4,9 @@ url: http://blog.nswebfrog.com
 author: nswebfrog
 highlighter: pygments
 exclude: ["Rakefile", "CNAME", "README.md"]
-safe: true
-paginate: 16
+safe: false
+paginate: 15
+
+
+# Gems
+gems: [jekyll-paginate]
