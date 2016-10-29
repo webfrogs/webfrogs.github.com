@@ -15,7 +15,7 @@ tags:
 
 1、@synchronized
 
-{% highlight objc %}
+```objc
 static InstanceClass *instance;
 + (InstanceClass *)defaultInstance{
     @synchronized (self){
@@ -23,10 +23,10 @@ static InstanceClass *instance;
             instance = [[InstanceClass alloc] init];
         }
     }
-    
+
     return instance;
 }
-{% endhighlight %}
+```
 
 2、GCD
 
@@ -39,7 +39,7 @@ static InstanceClass *instance;
     dispatch_once(&onceToken, ^{
         instance = [[InstanceClass alloc] init];
     });
-    
+
     return instance;
 }
 {% endhighlight %}

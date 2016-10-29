@@ -21,49 +21,51 @@ tags:
 
 ![图片](/assets/images/20150108-2.png)
 
-下面是 Swift 代码实现的约束: 
+下面是 Swift 代码实现的约束:
 
-	let view1 = UILabel()
-	view1.backgroundColor = UIColor.redColor()
-	view1.textAlignment = .Center
-	view1.text = "view1"
-	view1.textColor = UIColor.whiteColor()
-	view1.setTranslatesAutoresizingMaskIntoConstraints(false)
-	self.view.addSubview(view1)
-	
-	let view2 = UILabel()
-	view2.backgroundColor = UIColor.blueColor()
-	view2.textAlignment = .Center
-	view2.text = "view2"
-	view2.textColor = UIColor.whiteColor()
-	view2.setTranslatesAutoresizingMaskIntoConstraints(false)
-	self.view.addSubview(view2)
-	
-	let view3 = UILabel()
-	view3.backgroundColor = UIColor.purpleColor()
-	view3.textAlignment = .Center
-	view3.text = "view3"
-	view3.textColor = UIColor.whiteColor()
-	view3.setTranslatesAutoresizingMaskIntoConstraints(false)
-	self.view.addSubview(view3)
+```swift
+let view1 = UILabel()
+view1.backgroundColor = UIColor.redColor()
+view1.textAlignment = .Center
+view1.text = "view1"
+view1.textColor = UIColor.whiteColor()
+view1.setTranslatesAutoresizingMaskIntoConstraints(false)
+self.view.addSubview(view1)
 
-	let viewDic = [
-	"view1": view1,
-	"view2": view2,
-	"view3": view3,
-	
-	]
+let view2 = UILabel()
+view2.backgroundColor = UIColor.blueColor()
+view2.textAlignment = .Center
+view2.text = "view2"
+view2.textColor = UIColor.whiteColor()
+view2.setTranslatesAutoresizingMaskIntoConstraints(false)
+self.view.addSubview(view2)
 
-	var constraints = NSLayoutConstraint.constraintsWithVisualFormat("H:|-20-[view1]-10-[view2(==view1)]-10-[view3(==view2)]-20-|", options: NSLayoutFormatOptions(0), metrics: nil, views: viewDic)
-	self.view.addConstraints(constraints)
+let view3 = UILabel()
+view3.backgroundColor = UIColor.purpleColor()
+view3.textAlignment = .Center
+view3.text = "view3"
+view3.textColor = UIColor.whiteColor()
+view3.setTranslatesAutoresizingMaskIntoConstraints(false)
+self.view.addSubview(view3)
 
-	constraints = NSLayoutConstraint.constraintsWithVisualFormat("V:|-50-[view1(50)]", options: NSLayoutFormatOptions(0), metrics: nil, views: viewDic)
-	self.view.addConstraints(constraints)
+let viewDic = [
+"view1": view1,
+"view2": view2,
+"view3": view3,
 
-	constraints = NSLayoutConstraint.constraintsWithVisualFormat("V:|-50-[view2(50)]", options: NSLayoutFormatOptions(0), metrics: nil, views: viewDic)
-	self.view.addConstraints(constraints)
+]
 
-	constraints = NSLayoutConstraint.constraintsWithVisualFormat("V:|-50-[view3(50)]", options: NSLayoutFormatOptions(0), metrics: nil, views: viewDic)
-	self.view.addConstraints(constraints)
-	
+var constraints = NSLayoutConstraint.constraintsWithVisualFormat("H:|-20-[view1]-10-[view2(==view1)]-10-[view3(==view2)]-20-|", options: NSLayoutFormatOptions(0), metrics: nil, views: viewDic)
+self.view.addConstraints(constraints)
+
+constraints = NSLayoutConstraint.constraintsWithVisualFormat("V:|-50-[view1(50)]", options: NSLayoutFormatOptions(0), metrics: nil, views: viewDic)
+self.view.addConstraints(constraints)
+
+constraints = NSLayoutConstraint.constraintsWithVisualFormat("V:|-50-[view2(50)]", options: NSLayoutFormatOptions(0), metrics: nil, views: viewDic)
+self.view.addConstraints(constraints)
+
+constraints = NSLayoutConstraint.constraintsWithVisualFormat("V:|-50-[view3(50)]", options: NSLayoutFormatOptions(0), metrics: nil, views: viewDic)
+self.view.addConstraints(constraints)
+```
+
 如果将例子中的所有的水平 padding 都去掉的话，则三个子视图就将父视图的宽度三等分了。
