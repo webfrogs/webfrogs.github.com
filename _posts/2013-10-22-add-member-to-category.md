@@ -9,12 +9,12 @@ tags:
 
 ---
 
-##背景
+## 背景
 ----
 
 我们知道利用category可以在不知道某个类内部实现的情况下，为改类增加方法。但默认的情况下是不能添加成员变量的。但作为一门动态语言，我们可以利用objc的runtime来实现为其添加成员变量的功能，并且完成对KVO的支持。
 
-##实现
+## 实现
 ----
 
 选取iOS下比较知名的下拉刷新开源库SVPullToRefresh库为例，在其对UIScrollView的扩展中，就利用了这种技术为UIScrollView添加了成员变量。
@@ -42,4 +42,3 @@ static char UIScrollViewPullToRefreshView;
 {% endhighlight %}
 
 从上面代码可以看出，通过objc_setAssociatedObject和objc_getAssociatedObject这两个函数，完成了为UIScrollView添加SVPullToRefreshView类型变量的功能。同时，*willChangeValueForKey:*和*didChangeValueForKey:*这两个方法完成了KVO的功能。
-

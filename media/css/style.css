@@ -1,13 +1,3 @@
-/*------------------------------------
-* sext
-*
-* @author linghua.zhang@me.com
-* @link http://lhzhang.com/
-* @update 2011-12-20
-*
-* |/ | (~ (~
-* |\.|._)._)
-* --------------------------------- */
 
 body{font-size:14px;word-spacing:1px;
 	margin-left:auto;
@@ -23,6 +13,10 @@ ol,ul{list-style-position:inside;}
 ol ul, ul ol, ul ul, ol ol {margin-left:1em;}
 pre code{padding:3px 10px;font-size:16px;line-height:1.6;display:block;color:white;}
 pre p{padding:0 0;}
+pre,code{font-family:Menlo,"Andale Mono",Consolas,"Courier New",Monaco,monospace;font-size:13px;}
+pre{overflow:auto;}
+pre p code{background-color: rgba(0, 0, 0, 0);}
+p code,li code{background-color:#d0d0d0;}
 blockquote{display:block;text-align:justify;border-left:4px solid #eeeeee;}
 blockquote{margin:1em 0em;padding-left:1.5em;}
 blockquote p{margin:0;padding:.5em 0;}
@@ -52,10 +46,6 @@ h1{font-family:"Cuprum","Hiragino Sans GB","Microsoft YaHei",sans-serif;font-siz
 h2{font-family:"Cuprum","Hiragino Sans GB","Microsoft YaHei",sans-serif;font-size:1.4em;color:#111;margin-top: 1em;}
 h3{font-family:"Cuprum","Hiragino Sans GB","Microsoft YaHei",sans-serif;font-size:1.2em;color:#222;}
 h4{font-family:"Cuprum","Hiragino Sans GB","Microsoft YaHei",sans-serif;font-size:1em;color:#333;}
-pre,code{font-family:Menlo,"Andale Mono",Consolas,"Courier New",Monaco,monospace;font-size:13px;background-color:#282B35;}
-pre{overflow:auto;}
-pre p code{background-color: rgba(0, 0, 0, 0);}
-p code,li code{background-color:#d0d0d0;}
 embed,object,iframe{display:block;margin:4px auto;}
 .gist{font-size: 12px;line-height:1.6;}
 

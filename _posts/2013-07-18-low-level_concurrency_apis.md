@@ -6,14 +6,14 @@ categories:
 - iOS
 - translation
 tags:
-- 
+-
 
 
 ---
 
 本文由[webfrogs](http://webfrogs.me/)译自[objc.io](http://www.objc.io/issue-2/low-level-concurrency-apis.html)，原文作者[Daniel Eggert](https://twitter.com/danielboedewadt)。转载请注明出处！
 
-##小引
+## 小引
 ----
 本篇英文原文所发布的站点[objc.io](http://www.objc.io/)是一个专门为iOS和OS X开发者提供的深入讨论技术的平台，文章含金量很高。这个平台每月发布一次，每次都会有数篇文章针对同一个特殊的主题的不同方面来深入讨论。本月的主题是“并发编程”，本文翻译的正是其中的第4篇文章。
 
@@ -24,7 +24,7 @@ tags:
 
 首次翻译文章，水平有限，欢迎指正。
 
-##目录
+## 目录
 ----
 1、[从前。。。](#once_upon_a_time)    
 2、[延后执行](#delaying_after)    
@@ -55,9 +55,9 @@ tags:
 &nbsp;&nbsp;&nbsp;&nbsp;10.3、[原子队列](#atomic_queues)    
 &nbsp;&nbsp;&nbsp;&nbsp;10.4、[自旋锁](#spin_locks)    
 
-  
 
-##正文
+
+## 正文
 ----
 
 这篇文章里，我们将会讨论一些iOS和OS X都可以使用的底层API。除了*dispatch_once*，我们一般不鼓励使用其中的任何一种技术。
@@ -71,7 +71,7 @@ tags:
 也许，关于并发编程最好的书是*M. Ben-Ari*写的《Principles of Concurrent Programming》[ISBN 0-13-701078-8](https://en.wikipedia.org/wiki/Special:BookSources/0-13-701078-8)。如果你正在做任何有关并发编程的事情，你需要读一下这本书。这本书已经写了超过30年了，但仍然是无法超越。简洁的写法，优秀的例子和练习，带领你构建并发编程中的基本代码块。这本书现在已经绝版了，但是仍然有一些零散的复印本。有一个新版书，名字叫《Principles of Concurrent and Distributed Programming》[ISBN 0-321-31283-X](https://en.wikipedia.org/wiki/Special:BookSources/0-321-31283-X),好像有很多相同的地方，不过我还没有读过。
 
 <a id='once_upon_a_time' name='once_upon_a_time'> </a>
-###1、从前。。。
+### 1、从前。。。
 
 也许GCD中使用最多并且被滥用的就是*dispatch_once*了。正确的用法看起来是这样的：
 
@@ -94,7 +94,7 @@ tags:
 退回到远古时代（其实也就是几年前），人们会使用*pthread_once*，因为*dispatch_once_t*更容易使用并且不易出错，所以你永远都不会使用到*pthread_once*了。
 
 <a id='delaying_after' name='delaying_after'> </a>
-###2、延后执行
+### 2、延后执行
 
 另一个常见的朋友就是*dispatch_after*了。它使工作延后执行。它是很强大的，但是要注意：你很容易就陷入到一堆麻烦中。一般的使用是这样的：
 
@@ -118,7 +118,7 @@ tags:
 如果你需要一些事情在某个特定的时刻及时的运行，那么 *dispatch_after* 或许会是个好的选择。确保同时考虑了*NSTimer*，这个API虽然有点笨重，但是它允许你取消这个定时。
 
 <a id='queues' name='queues'> </a>
-###3、队列
+### 3、队列
 
 GCD的一个最基本的部分就是队列。下面我们会给出一些如何使用它的例子。当使用队列的时候，给它们一个好的标签会帮自己不少忙。当调试的时候，这个标签会在Xcode(和lldb)中显示，这会帮助你了解应用程序当前是由谁负责的：
 
@@ -129,7 +129,7 @@ GCD的一个最基本的部分就是队列。下面我们会给出一些如何�
     if (self != nil) {
         NSString *label = [NSString stringWithFormat:@"%@.isolation.%p", [self class], self];
         self.isolationQueue = dispatch_queue_create([label UTF8String], 0);
-        
+
         label = [NSString stringWithFormat:@"%@.work.%p", [self class], self];
         self.workQueue = dispatch_queue_create([label UTF8String], 0);
     }
@@ -222,7 +222,7 @@ GCD通过创建所谓的线程池来大致匹配CPU核心数量。要记住，�
 4. *isolationQueue*创建时，参数*dispatch_queue_attr_t*的值需要是*DISPATCH_QUEUE_SERIAL*（或者0）。
 
 <a id='multiple_readers_single_writer' name='multiple_readers_single_writer'> </a>
-####4.2、单一资源的多读单写
+#### 4.2、单一资源的多读单写
 
 我们能够改善上面的那个例子。GCD有可以让多线程运行的并发队列。我们能够安全地使用多线程来从*NSMutableDictionary*中读取只要我们不同时修改它。当我们需要改变这个字典时，我们使用*barrier*来分发这个块代码。这样的块代码会在所有之前预定好的块代码完成之后执行，并且所有在它之后的块都会在它完成后才会执行。
 
@@ -251,7 +251,7 @@ self.isolationQueue = dispatch_queue_create([label UTF8String], DISPATCH_QUEUE_C
 当你使用并发队列时，要确保所有的*barrier*调用都是*async*（异步）的。如果你使用*dispatch_barrier_sync*，那么你很可能会使你自己（更确切的说是，你的代码）产生死锁。写操作需要*barrier*，并且可以是*async*的。
 
 <a id='contention' name='contention'> </a>
-####4.3、锁竞争
+#### 4.3、锁竞争
 首先，这里有一句警告：上面这个例子中我们保护的资源是一个*NSMutableDictionary*，这段代码作为一个例子运行的不错。但是在真实的代码环境下，把孤立队列放到一个正确的复杂度层级下是很重要的。
 
 如果你对*NSMutableDictionary*的访问操作变得非常频繁，你会碰到一个已知的叫做锁竞争的问题。锁竞争并不是只是在GCD和队列下才变得特殊，任何使用了锁机制的程序都会碰到同样的问题——只不过不同的锁机制会以不同的方式碰到。
@@ -267,7 +267,7 @@ self.isolationQueue = dispatch_queue_create([label UTF8String], DISPATCH_QUEUE_C
 在你自己的代码中，要考虑自己是否在更高的层次保护了孤立队列。举个例子，类*Foo*有一个孤立队列并且它本身保护着自己访问*NSMutableDictionary*，有可能有一个用到了*Foo*的类*Bar*有一个孤立队列保护所有对类*Foo*的使用。换句话说，你需要把类*Foo*改变为不再是线程安全的（没有孤立队列），并在*Bar*中，使用一个孤立队列来确保同一时间只能有一个线程使用*Foo*。
 
 <a id='fully_async' name='fully_async'> </a>
-####4.4、全都使用异步分发
+#### 4.4、全都使用异步分发
 我们在这稍稍转变以下话题。正如你在上面看到的，你可以分发一个块，一个工作单元的方式，即可以是同步的，也可以是异步的。我们在[关于并发API和陷阱的文章](http://www.objc.io/issue-2/concurrency-apis-and-pitfalls.html#dead_locks)（可以参考破船的译文，见本文开头）中讨论最多的就是死锁。在GCD中，以同步分发的方式非常容易出现这种情况。见下面的代码：
 
 {% highlight objc %}
@@ -325,7 +325,7 @@ dispatch_async(queueA, ^(){
 要记住这些。死锁通常是最难处理的问题。
 
 <a id='write_good_async_api' name='write_good_async_api'> </a>
-####4.5、如何写出好的异步API
+#### 4.5、如何写出好的异步API
 如果你正在给设计一个给别人（或者是给自己）使用的API，你需要记住几个好的实践。
 
 正如我们刚刚提到的，你需要倾向于异步API。当你创建一个API，它会在你的控制之外以各种方式调用，如果你的代码能产生死锁，那么死锁就会发生。
@@ -351,7 +351,7 @@ dispatch_async(queueA, ^(){
 如果你以这种方式来写你的类，让类一起工作就会变得相当容易。如果类A使用了类B，它会把自己的孤立队列设置为B的回调队列。
 
 <a id='iterative_execution' name='iterative_execution'> </a>
-###5、迭代执行
+### 5、迭代执行
 如果你正在摆弄一些数字，并且手头上的问题可以拆分为小的同样的部分，那么*dispatch_apply*会很有用。
 
 如果你的代码看起来是这样的：
@@ -381,7 +381,7 @@ block中运行的工作一定要是非常重要的，否则最外层的那个dis
 除非代码受到计算带宽的约束，每个工作单元读写所需要的合适的缓存大小所占用内存是无关紧要的，这对性能会带来显著的影响。受到临界区约束的代码可能不会运行良好。详细讨论这些问题已经超出了这篇文章的范围。使用*dispatch_apply*可能会对性能提升有所帮助，但是性能优化本身是个很复杂的主题。维基百科上有一篇关于[Memory-bound function](https://en.wikipedia.org/wiki/Memory_bound)的文章。内存访问速度在L2，L3和主存上变化很大。当你的数据访问模式与缓存大小不匹配时，10倍的性能下降的情况并不少见。
 
 <a id='groups' name='groups'> </a>
-###6、组
+### 6、组
 很多时候，你发现需要将几个异步代码块组合起来去完成一个给定的任务。这些任务中甚至有些是可以并行的。现在，如果你想要在这些代码块都执行完成后运行一些代码，“组”可以完成这项任务。看这里的例子：
 
 {% highlight objc %}
@@ -415,7 +415,7 @@ dispatch_group_notify(group, dispatch_get_main_queue(), ^(){
 同时需要注意的是，在这个小的简单的例子中，我们是怎么在不同的队列间进切换的。
 
 <a id='with_existing_api' name='with_existing_api'> </a>
-####6.1、对现有API使用*dispatch_group_t*
+#### 6.1、对现有API使用*dispatch_group_t*
 一旦你将组作为你的工具箱中的一部分，你可能会想知道为什么大多数的异步API不把*dispatch_group_t*作为其的一个可选参数。这没有什么令人绝望的理由，仅仅是因为自己添加这个功能太简单了，但是你还是要小心以确保自己的代码是成对出现的。
 
 举例来说，我们可以给**Core Data**的*-performBlock:*函数添加上组的功能，那么API会变得像这个样子：
@@ -440,19 +440,19 @@ dispatch_group_notify(group, dispatch_get_main_queue(), ^(){
 很明显，我们可以给**NSURLConnection**做同样的事情：
 
 {% highlight objc %}
-+ (void)withGroup:(dispatch_group_t)group 
-        sendAsynchronousRequest:(NSURLRequest *)request 
-        queue:(NSOperationQueue *)queue 
++ (void)withGroup:(dispatch_group_t)group
+        sendAsynchronousRequest:(NSURLRequest *)request
+        queue:(NSOperationQueue *)queue
         completionHandler:(void (^)(NSURLResponse*, NSData*, NSError*))handler
 {
     if (group == NULL) {
-        [self sendAsynchronousRequest:request 
-                                queue:queue 
+        [self sendAsynchronousRequest:request
+                                queue:queue
                     completionHandler:handler];
     } else {
         dispatch_group_enter(group);
-        [self sendAsynchronousRequest:request 
-                                queue:queue 
+        [self sendAsynchronousRequest:request
+                                queue:queue
                     completionHandler:^(NSURLResponse *response, NSData *data, NSError *error){
             handler(response, data, error);
             dispatch_group_leave(group);
@@ -467,7 +467,7 @@ dispatch_group_notify(group, dispatch_get_main_queue(), ^(){
 * dispatch_group_enter()和dispatch_group_leave()通常是成对出现的（就算有错误产生时）。
 
 <a id='sources' name='sources'> </a>
-###7、事件源
+### 7、事件源
 
 GCD有一个较少人知道的特性：事件源dispatch_source_t。
 
@@ -476,17 +476,17 @@ GCD有一个较少人知道的特性：事件源dispatch_source_t。
 GCD事件源是以极其资源高效的方式实现的。
 
 <a id='watching_processes' name='watching_processes'> </a>
-####7.1、监视进程
+#### 7.1、监视进程
 如果一些进程正在运行而你想知道他们什么时候存在，GCD能够做到这些。你也可以使用GCD来检测进程什么时候分叉，也就是产生了子进程或者一个信号被传送给了进程（比如SIGTERM）。
 
 {% highlight objc %}
-NSRunningApplication *mail = [NSRunningApplication 
+NSRunningApplication *mail = [NSRunningApplication
   runningApplicationsWithBundleIdentifier:@"com.apple.mail"];
 if (mail == nil) {
     return;
 }
 pid_t const pid = mail.processIdentifier;
-self.source = dispatch_source_create(DISPATCH_SOURCE_TYPE_PROC, pid, 
+self.source = dispatch_source_create(DISPATCH_SOURCE_TYPE_PROC, pid,
   DISPATCH_PROC_EXIT, DISPATCH_TARGET_QUEUE_DEFAULT);
 dispatch_source_set_event_handler(self.source, ^(){
     NSLog(@"Mail quit.");
@@ -497,7 +497,7 @@ dispatch_resume(self.source);
 当*Mail.app*退出的时候，这个程序会打印出*Mail quit.*。
 
 <a id='watching_files' name='watching_files'> </a>
-####7.2、监视文件
+#### 7.2、监视文件
 这种可能性是无穷尽的。你能直接监视一个文件的改变，并且当改变发生时，事件源的事件处理将会被调用。
 
 你也可以使用它来监视文件夹，比如创建一个*watch folder*。
@@ -511,7 +511,7 @@ if (fd < 0) {
     NSLog(@"Unable to open \"%@\": %s (%d)", [directoryURL path], buffer, errno);
     return;
 }
-dispatch_source_t source = dispatch_source_create(DISPATCH_SOURCE_TYPE_VNODE, fd, 
+dispatch_source_t source = dispatch_source_create(DISPATCH_SOURCE_TYPE_VNODE, fd,
   DISPATCH_VNODE_WRITE | DISPATCH_VNODE_DELETE, DISPATCH_TARGET_QUEUE_DEFAULT);
 dispatch_source_set_event_handler(source, ^(){
     unsigned long const data = dispatch_source_get_data(source);
@@ -532,7 +532,7 @@ dispatch_resume(self.source);
 你应该一直添加DISPATCH_VNODE_DELETE去检测文件或者文件夹是否已经被删除——然后就停止监听。
 
 <a id='timers' name='timers'> </a>
-####7.3、定时器
+#### 7.3、定时器
 大多数情况下，对于定时事件，你会选择**NSTimer**。定时器的GCD版本是底层的，它会给你更多控制权——但要小心使用。
 
 需要特别重点指出的是，为了让OS节省电量，需要为GCD的定时器接口指定一个低的误差值。如果你不必要的指定了一个过低的误差值，你将会浪费更多的电量。
@@ -540,26 +540,26 @@ dispatch_resume(self.source);
 这里我们设定了一个5秒的定时器，并允许有十分之一秒的误差：
 
 {% highlight objc %}
-dispatch_source_t source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 
+dispatch_source_t source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER,
   0, 0, DISPATCH_TARGET_QUEUE_DEFAULT);
 dispatch_source_set_event_handler(source, ^(){
     NSLog(@"Time flies.");
 });
 dispatch_time_t start
-dispatch_source_set_timer(source, DISPATCH_TIME_NOW, 5ull * NSEC_PER_SEC, 
+dispatch_source_set_timer(source, DISPATCH_TIME_NOW, 5ull * NSEC_PER_SEC,
   100ull * NSEC_PER_MSEC);
 self.source = source;
 dispatch_resume(self.source);
 {% endhighlight %}
 
 <a id='canceling' name='canceling'> </a>
-####7.4、取消
+#### 7.4、取消
 所有的事件源都允许你添加一个*cancel handler*。这对清理你为事件源创建的任何资源都是很有帮助的，比如关闭文件描述符。GCD保证在*cancel handle*调用前，所有的事件处理都已经完成调用。
 
 看上面的[监视文件例子](#watching_files)中对*dispatch_source_set_cancel_handler()*的使用。
 
 <a id='input_output' name='input_output'> </a>
-###8、输入输出
+### 8、输入输出
 写出能够在繁重的I/O处理情况下运行良好的代码是一件非常棘手的事情。GCD有一些能够帮上忙的地方。不会涉及太多的细节，我们只简单的分析下问题是什么，GCD是怎么处理的。
 
 习惯上，当你从一个网络套接字中读取数据时，你要么做一个阻塞的读取操作，也就是让你个线程一直等待直到数据变得可用，或者是做反复的轮询操作。这两种方法都是很浪费资源并且无法度量。然而，*kqueue*解决了轮询的问题，通过当数据变得可用时传递一个事件，GCD也采用了同样的方法，但是更加优雅。当向套接字写数据时，同样的问题也存在，这时你要么做阻塞的写操作，要么等待套接字能够接收数据。
@@ -580,7 +580,7 @@ dispatch_resume(self.source);
 如果你是在寻找HTTP的头部，将所有数据块组合成一个大的缓冲区并且从中查找**\r\n\r\n**是非常简单的。但是这样做，你会大量地复制这些数据。大量旧的C语言API存在的一个问题就是，缓冲区没有所有权的概念，所以函数不得不将数据再次拷贝到自己的缓冲区中——又一次的拷贝。拷贝数据操作看起来是无关紧要的，但是当你正在做大量的I/O操作的时候，你会在你的*profiling tool(Instruments)*中看到这些拷贝操作大量出现。即使你仅仅每个内存区域拷贝一次，你还是使用了两倍的存储带宽并且占用了两倍的内存缓存。
 
 <a id='gcd_and_buffers' name='gcd_and_buffers'> </a>
-####8.1、GCD和缓冲区
+#### 8.1、GCD和缓冲区
 最直接了当的方法是使用数据缓冲区。GCD有一个*dispatch_data_t*类型，在某种程度上和Objective-C的*NSData*类型很相似。但是它能做别的事情，而且更通用。
 
 注意，*dispatch_data_t*能够做*retain*和*release*操作，并且*dispatch_data_t*拥有它持有的对象。
@@ -608,11 +608,11 @@ dispatch_data_apply(c, ^(dispatch_data_t region, size_t offset, const void *buff
 类似的，你可以使用*dispatch_data_create_subrange*来创建一个不做任何拷贝操作的子区域。
 
 <a id='reading_and_writing' name='reading_and_writing'> </a>
-####8.2、读和写
+#### 8.2、读和写
 在GCD的内核中，*Dispatch I/O*就是所谓的通道。调度I/O通道提供了一种从文件描述符中读写的不同的方式。创建这样一个通道最基本的方式就是调用：
 
 {% highlight objc %}
-dispatch_io_t dispatch_io_create(dispatch_io_type_t type, dispatch_fd_t fd, 
+dispatch_io_t dispatch_io_create(dispatch_io_type_t type, dispatch_fd_t fd,
   dispatch_queue_t queue, void (^cleanup_handler)(int error));
 {% endhighlight %}
 
@@ -698,7 +698,7 @@ dispatch_io_read(_channel, 0, SIZE_MAX, _isolation, ^(bool done, dispatch_data_t
 如果所有你想做的只是读取或者写入一个文件，GCD提供了两个方便的包装器：*dispatch_read*和*dispatch_write*。你需要传递给*dispatch_read*一个文件路径和一个在所有数据块读取完后调用的代码块。类似的，*dispatch_write*需要一个文件路径和一个被写入的*dispatch_data_t*对象。
 
 <a id='benchmarking' name='benchmarking'> </a>
-###9、基准测试
+### 9、基准测试
 在GCD的一个不起眼的角落，你会发现一个适合优化代码的灵巧小工具：
 
 {% highlight objc %}
@@ -736,13 +736,13 @@ NSLog(@"-[NSMutableArray addObject:] : %llu ns", n);
 访问帮助界面：
 
 {% highlight html %}
-curl "http://opensource.apple.com/source/libdispatch/libdispatch-84.5/man/dispatch_benchmark.3?txt" 
+curl "http://opensource.apple.com/source/libdispatch/libdispatch-84.5/man/dispatch_benchmark.3?txt"
   | /usr/bin/groffer --tty -T utf8
 {% endhighlight %}
 
 
 <a id='atomic_operations' name='atomic_operations'> </a>
-###10、原子操作
+### 10、原子操作
 头文件*libkern/OSAtomic.h*里有许多强大的函数，专门用来底层多线程编程。尽管它是内核头文件的一部分，它也能够在内核之外来帮助编程。
 
 这些函数都是很底层的，并且你需要知道一些额外的事情。就算你已经知道了，你还可能会发现一两件你不能做，或者不易做的事情。当你正在为高性能代码工作或者正在实现无锁的和无等待的算法工作时，这些函数会吸引你。
@@ -750,13 +750,13 @@ curl "http://opensource.apple.com/source/libdispatch/libdispatch-84.5/man/dispat
 这些函数在*atomic(3)*的帮助页里全部有概述——运行*man 3 atomic*命令以得到完整的文档。你会发现里面讨论到了内存屏障。查看维基百科中关于[内存屏障](https://en.wikipedia.org/wiki/Memory_barrier)的文章。如果你不能确定，那么你很可能需要它。
 
 <a id='counters' name='counters'> </a>
-####10.1、计数器
+#### 10.1、计数器
 *OSAtomicIncrement*和*OSAtomicDecrement*有一个很长的函数列表允许你以原子操作的方式去增加和减少一个整数值，这不必使用锁（或者队列）同时也是线程安全的。如果你需要让一个全局的计数器值增加，而这个计数器为了统计目的而由多个线程操作，使用原子操作是很有帮助的。如果你要做的仅仅是增加一个全局计数器，那么无屏障版本的*OSAtomicIncrement*是很合适的，并且当没有锁竞争时，调用它们的代价很小。
 
 类似的，*OSAtomicOr*，*OSAtomicAnd*，*OSAtomicXor*的函数能用来进行逻辑运算，而*OSAtomicTest*可以用来设置和清除位。
 
 <a id='compare_and_swap' name='compare_and_swap'> </a>
-####10.2、比较和交换
+#### 10.2、比较和交换
 *OSAtomicCompareAndSwap*能用来做无锁的懒初始化，如下：
 
 {% highlight objc %}
@@ -778,13 +778,13 @@ void * sharedBuffer(void)
 明显的，使用*dispatch_once()*我们也可以完成类似的事情。
 
 <a id='atomic_queues' name='atomic_queues'> </a>
-####10.3、原子队列
+#### 10.3、原子队列
 *OSAtomicEnqueue()*和*OSAtomicDequeue()*可以让你实现一个LIFO队列，以线程安全，无锁的方式。对有潜在精确要求的代码来说，这会是强大的构建方式。
 
 还有*OSAtomicFifoEnqueue()*和*OSAtomicFifoDequeue()*是为了操作FIFO队列，但这些只有在头文件中才有文档——使用他们的时候要小心。
 
 <a id='spin_locks' name='spin_locks'> </a>
-####10.4、自旋锁
+#### 10.4、自旋锁
 最后，OSAtomic.h头文件定义了使用自旋锁的函数：*OSSpinLock*。再次的，维基百科有深入的有关[自旋锁](https://en.wikipedia.org/wiki/Spinlock)的信息。使用命令*man 3 spinlock*查看帮助页的*spinlock(3)*。当没有锁竞争时使用自旋锁代价很小。
 
 在合适的情况下，使用自旋锁对性能优化是很有帮助的。一如既往：先测量，然后优化。不要做乐观的优化。
