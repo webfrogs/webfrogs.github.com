@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "IOS官方文档阅读之动画"
+title: "iOS 官方文档阅读之动画"
 categories:
 - iOS
 tags:

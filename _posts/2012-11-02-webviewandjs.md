@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "IOS中UIWebView和JavaScript交互"
+title: "iOS 中 UIWebView 和 JavaScript 交互"
 description: ""
 category: iOS
 tags: [iOS]
@@ -14,10 +14,10 @@ tags: [iOS]
 
 这里的实现主要是通过对UIWebView的delegate方法  
 
-	-(BOOL)webView: shouldStartLoadWithRequest: navigationType: 
+	-(BOOL)webView: shouldStartLoadWithRequest: navigationType:
 
 进行处理来实现的。通过在得到webview所要加载的url来判断是否是需要处理的条件即可。
-下面举个具体例子来完成这个操作。如果需要通过JS来通知客户端需要调用用户登录的相关操作。首先跟服务端定好相关的协议串。提供一个方案，协议串的格式如下， 
+下面举个具体例子来完成这个操作。如果需要通过JS来通知客户端需要调用用户登录的相关操作。首先跟服务端定好相关的协议串。提供一个方案，协议串的格式如下，
 
 	XX::command:param1=value1&param2=value2…
 	//XX是协议名，command是命令名，后面是参数表（0或多个，command后的冒号不可省略）    
@@ -31,13 +31,13 @@ tags: [iOS]
 	function sendLoginCommand(){  
     	var url="test::login:";  
     	document.location = url;  
-	} 
-	
+	}
+
 对应IOS端的代码是：
 
-	
+
 	- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{ ~
-        
+
     	// 处理事件
     	NSString *requestString = [[request URL] absoluteString];
     	NSArray *components = [requestString componentsSeparatedByString:@"::"];
@@ -56,10 +56,10 @@ tags: [iOS]
             	return NO;
         	}
     	}
-    
-    
+
+
     	return YES;
-	}	
+	}
 
 
 **客户端向JS传递数据**
@@ -83,4 +83,3 @@ tags: [iOS]
 这样在IOS环境下JS也可以通过调用 window.test.getUsername()来获取用户名了。
 
 *EOF*
-
