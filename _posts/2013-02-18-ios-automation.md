@@ -10,7 +10,7 @@ tags:
 
 ---
 
-###前言
+### 前言
 
 -----
 
@@ -19,7 +19,7 @@ IOS的开发过程中，当需要给测试人员发布测试包的时候，直�
 目前脚本已经完成，基本可以满足我目前的需求。现将其开源，托管在github上，项目地址：[点击这里](https://github.com/webfrogs/xcode_shell)
 
 
-###思路
+### 思路
 
 ----
 
@@ -31,9 +31,9 @@ IOS的开发过程中，当需要给测试人员发布测试包的时候，直�
 
 关于itms-services协议的一些内容，可以参考我之前的文章:[《shell脚本实现ipa一键安装(itms-services协议)》](/2012/09/27/ipapublsh/)
 
-**注意：**默认安装完的xcode并没有自带“Command Line Tools”，需要在xcode中选择后下载才能使用
+**注意：** 默认安装完的xcode并没有自带“Command Line Tools”，需要在xcode中选择后下载才能使用
 
-###实现
+### 实现
 
 ----
 
@@ -46,15 +46,15 @@ IOS的开发过程中，当需要给测试人员发布测试包的时候，直�
 	sftpUploadFile: 通过sftp协议上传文件
 	updateLocalIndexHtml:	对索引文件进行处理(二进制文件，非shell脚本)
 	uploadItemsServicesFiles:	将itms-services协议文件上传到服务器
-	
-	
+
+
 实际使用的脚本，只有"ipa-build"和"ipa-publish"这两个。其他文件会被ipa-publish这个脚本调用的依赖文件。其中出了"updateLocalIndexHtml"是我用objc写的一个用来进行文本处理的编译后的二进制文件，其余均为shell脚本。
 
 shell脚本实现，大家可以打开脚本来看一下，里面的注释算是很详细了。不需要太多说明。
 
 其中值得一提的就是我在写sftp协议上传功能的时候，碰到了一个问题就是使用脚本来自动输入密码，也就是交互式脚本的编写。最后选择了expect来完成，因为我发现mac系统里自带了这个expect命令。
 
-###使用
+### 使用
 
 ----
 
@@ -71,12 +71,12 @@ ipa-build脚本运行后，会在IOS工程根路径下生成名为“build”的
 ipa-publish脚本使用方法:
 
 	ipa-publish脚本绝对路径 参数1 参数2
-	
+
 参数1是IOS工程的根路径,是必输项。参数2是可选的，含义是当上传文件成功后是否发送email通知，y为发送，n为不发送，默认的值是不发送。
 
 ipa-publish脚本运行后，会在“build”文件夹中生成一个以工程的targetname为名字的文件夹。其中，存放了itms-services协议所需的所有文件。脚本会将里面内容全部上传到服务器中。
 
-###注意事项
+### 注意事项
 ----
 
 1、运行脚本需要绝对路径，不能使用相对路径。
@@ -112,7 +112,6 @@ ipa-publish脚本运行后，会在“build”文件夹中生成一个以工程�
 
 
 	#可配置内容  end
-	
-	
-根据实际情况配置即可。
 
+
+根据实际情况配置即可。

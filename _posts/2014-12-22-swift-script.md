@@ -9,7 +9,7 @@ tags:
 
 ---
 
-作为苹果新一代的编程语言，Swift 不仅可以用来开发 iOS 应用，还可以用来编写脚本，来完成 OS X 下的一些自动化的工作。终于可以用我们熟悉的语言来写自动化脚本了，想想是不是就觉得心里有点小激动呢^_^。 让我们开始编写脚本吧。
+作为苹果新一代的编程语言，Swift 不仅可以用来开发 iOS 应用，还可以用来编写脚本，来完成 OS X 下的一些自动化的工作。终于可以用我们熟悉的语言来写自动化脚本了，想想是不是就觉得心里有点小激动呢^_^。让我们开始编写脚本吧。
 
 ## 编写脚本
 ---
@@ -17,18 +17,18 @@ tags:
 老规矩，从 Hello World 开始。
 
 新建一个 Swift 文件，就叫 `Hello.swift` 吧。使用文本编辑器打开输入以下内容，并保存：
-	
+
 	#!/usr/bin/env xcrun swift
 	println("Hello World")
 
 打开终端，切换到保存 `Hello.swift` 文件的路径下，为该文件添加可执行权限，命令如下：
 
 	chmod +x Hello.swift
-	
+
 然后运行一下这个文件：
 
 	./Hello.swift
-	
+
 终端上输出了熟悉的 `Hello World`。
 
 
@@ -47,7 +47,7 @@ tags:
 	let task = NSTask()
 	task.launchPath = "/bin/bash"
 	task.arguments = ["-c", shell]
-	
+
 	task.launch()
 
 字符串常量 `shell` 可以是任意能在 `bash` 中执行的 shell 脚本文本内容

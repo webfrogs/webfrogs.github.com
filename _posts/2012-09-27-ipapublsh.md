@@ -7,7 +7,7 @@ tags: [iOS, xcode]
 ---
 
 
-#简介
+# 简介
 ----
 通过itms-services协议，可以通过safari浏览器直接在IOS设备上安装应用程序。具体效果可以看图。
 
@@ -19,12 +19,12 @@ itms-services协议需要一个plist配置文件。如果要实现上面图示�
 
 **注意：** 该脚本需要与“ipa-build”脚本配合使用。“ipa-build”脚本下载：[点击这里](/assets/download/ipa-build)，相关文章[《xcode自动打ipa包脚本》](http://webfrogs.github.com/2012/09/19/buildipa/)
 
-#实现
+# 实现
 ----
 
 这里提供shell脚本下载，下载完后，只需要为其增加可执行权限即可。[下载点这里](/assets/download/ipa-publish)
 
-#使用
+# 使用
 ----
 该脚本依赖“ipa-build”脚本所产生的内容，所以在执行该脚本之前，首先需要执行“ipa-build”脚本。执行该脚本有两个参数：第一个为xcode工程根路径。第二个是在安装时的显示程序的名称，即第三幅图中下载安装时所显示的名字，第二个参数可选，默认的是xcode工程的target的名字。
 
@@ -39,7 +39,7 @@ itms-services协议需要一个plist配置文件。如果要实现上面图示�
 
 这里提供一个测试地址: [http://webfrogs.github.com/urls/HuaRongDao/](http://webfrogs.github.com/urls/HuaRongDao/) 直接通过IOS设备的safari浏览器访问该url，然后点击其中的链接，就可以出现开始时图示的信息了。
 
-#总结
+# 总结
 ----
 这篇文章写的比较乱，其实这么做的真正意义是，可以通过脚本，来实现一些CI的功能。
 之后还可以用脚本来写自动上传的功能，完成xcode工程自动打包，生成文件，以及上传自动化。减轻我们开发时打包的工作量，同时也方便了测试人员安装测试。脚本还有很多可以优化的地方，比如，打包脚本的增加根据渠道来打不同包的功能。
