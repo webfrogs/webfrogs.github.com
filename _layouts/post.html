@@ -10,13 +10,13 @@ layout: default
 <br/>
 <br/>
 <span>
-	<a {% if page.previous %} href="{{ site.url }}{{ page.previous.url }}" class="pageNav"{% endif %} {% unless page.previous %} class="pageNavInvalid" {% endunless %} >Previous</a>
+	<a {% if page.next %} href="{{ site.url }}{{ page.next.url }}" class="pageNav"{% endif %} {% unless page.next %} class="pageNavInvalid" {% endunless %} >Previous</a>
 	&nbsp;&nbsp;&nbsp;
-	<a {% if page.next %} href="{{ site.url }}{{ page.next.url }}" class="pageNav"{% endif %} {% unless page.next %} class="pageNavInvalid" {% endunless %} >Next</a>
+	<a {% if page.previous %} href="{{ site.url }}{{ page.previous.url }}" class="pageNav"{% endif %} {% unless page.previous %} class="pageNavInvalid" {% endunless %} >Next</a>
 </span>
 <hr>
 <span class="author">
-  <a href="http://webfrogs.github.com">{{ site.author }}</a>
+  <a href="/about/">{{ site.author }}</a>
 </span>
 <span class="time">
   /
@@ -36,11 +36,10 @@ layout: default
 {% endif %}
 {% if page.tags %}
 <span class="tags">
-  tagged with 
+  tagged with
   {% for tag in page.tags %}
   <a href="/tags/#{{ tag }}" title="{{ tag }}">{{ tag }}</a>&nbsp;
   {% endfor %}
 </span>
 {% endif %}
 </section>
-
